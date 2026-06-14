@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkore | Premium Curated Essentials</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Link<span>ore</span></a>
+            <nav>
+                <a href="index.html" class="active">Shop</a>
+                <a href="blog.html">Editorial</a>
+                <a href="customize.html">Custom Studio</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Refined Collections.</h1>
+        <p>A handpicked ecosystem of premium lifestyle products and minimalist essentials.</p>
+    </section>
+
+    <main class="container">
+        <!-- Interactive Category Switcher -->
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="filterCategory('all')">All Gear</button>
+            <button class="tab-btn" onclick="filterCategory('tech')">Tech & Tools</button>
+            <button class="tab-btn" onclick="filterCategory('lifestyle')">Lifestyle</button>
+        </div>
+
+        <div class="grid" id="product-grid">
+            
+            <!-- PRODUCT CARD 1: AMAZON AFFILIATE ITEM -->
+            <div class="card" data-category="tech">
+                <div class="card-img-wrapper">
+                    <!-- Paste your product photo link inside src="" below -->
+                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=600" alt="Minimal mechanical keyboard">
+                </div>
+                <div class="card-content">
+                    <span class="card-tag">Curated Tech</span>
+                    <h3>Studio Mechanical Keyboard</h3>
+                    <p>Ultra-minimalist layout featuring responsive brown switches and solid anodized aluminum architecture.</p>
+                    <div class="card-footer">
+                        <span class="price">₹4,499</span>
+                        <!-- Replace internal href with your unique Amazon Affiliate URL -->
+                        <a href="https://amazon.in" target="_blank" class="btn btn-amazon">View on Amazon</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCT CARD 2: DROPSHIPPED / INQUIRY ITEM -->
+            <div class="card" data-category="lifestyle">
+                <div class="card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=600" alt="Minimalist Watch">
+                </div>
+                <div class="card-content">
+                    <span class="card-tag">Linkore Original</span>
+                    <h3>The Classic Matte Watch</h3>
+                    <p>Designed with a premium matte black chassis, custom Japanese quartz interior mechanics, and premium full-grain leather strap.</p>
+                    <div class="card-footer">
+                        <span class="price">₹2,199</span>
+                        <!-- Custom JS link prompts user data processing -->
+                        <button class="btn" onclick="openInquiry('The Classic Matte Watch')">Order Inquiry</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="mailto:contact.linkore@gmail.com">Contact Support</a>
+        </div>
+        <p>&copy; 2026 Linkore. All rights reserved.</p>
+        <p class="disclosure">Disclaimer: As an Amazon Associate, Linkore earns a modest tracking commission from qualifying product selections verified through outward platform links.</p>
+    </footer>
+
+    <!-- Native Dynamic Category Switcher Script -->
+    <script>
+        function filterCategory(category) {
+            const cards = document.querySelectorAll('.card');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            cards.forEach(card => {
+                if(category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openInquiry(productName) {
+            // Smooth routing straight into custom studio layout passing product variables
+            window.location.href = `customize.html?item=${encodeURIComponent(productName)}`;
+        }
+    </script>
+</body>
+</html>
