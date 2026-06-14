@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkore Studio | Form Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Link<span>ore</span></a>
+            <nav>
+                <a href="index.html">Shop</a>
+                <a href="blog.html">Editorial</a>
+                <a href="customize.html" class="active">Custom Studio</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Order Desk & Custom Studio</h1>
+        <p>Specify design assets, custom print parameters, or process a standard dropship invoice inquiry directly to our team queue.</p>
+    </section>
+
+    <main class="container">
+        <div class="form-container">
+            
+            <!-- ZERO-COST SECURE FORM HANDLER ROUTE -->
+            <!-- CRITICAL ACTION STEP: Replace the dummy Web3Forms key below with your actual Key -->
+            <form action="https://api.web3forms.com/submit" method="POST">
+                <input type="hidden" name="access_key" value="YOUR_ACTUAL_WEB3FORMS_ACCESS_KEY_HERE">
+                <input type="hidden" name="subject" value="New Linkore Customer Request">
+
+                <div class="form-group">
+                    <label for="product">Target Item / Custom Requirement</label>
+                    <input type="text" id="product" name="Product_Or_Design" placeholder="e.g., Custom Minimalist T-Shirt / Matte Watch" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="specs">Variation Options (Size / Color / Print Details)</label>
+                    <select id="specs" name="Item_Variant">
+                        <option value="standard">Standard Variation (As Shown in Catalog)</option>
+                        <option value="size-S">Premium Cotton T-Shirt - Small</option>
+                        <option value="size-M">Premium Cotton T-Shirt - Medium</option>
+                        <option value="size-L">Premium Cotton T-Shirt - Large</option>
+                        <option value="size-XL">Premium Cotton T-Shirt - Extra Large</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Your Full Legal Name</label>
+                    <input type="text" id="name" name="Customer_Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Contact Email Address</label>
+                    <input type="email" id="email" name="Customer_Email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Complete Shipping Address (Include City, State, Country & PIN Code)</label>
+                    <textarea id="address" name="Shipping_Address" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="suggestions">Custom Suggestions / Special Orders</label>
+                    <textarea id="suggestions" name="Customer_Suggestions" rows="3" placeholder="Tell us what changes you want or share external link paths to your customized print art files..."></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width:100%; padding:15px; background:var(--text-muted); color:#000; font-weight:600; border:none;">Submit Secure Inquiry</button>
+            </form>
+
+        </div>
+    </main>
+
+    <script>
+        // Automatic population algorithm: extracts item variables from routing links
+        const urlParams = new URLSearchParams(window.location.search);
+        const autoProduct = urlParams.get('item');
+        if (autoProduct) {
+            document.getElementById('product').value = autoProduct;
+        }
+    </script>
+</body>
+</html>
