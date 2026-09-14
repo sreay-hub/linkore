@@ -1,109 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linkore | Premium Curated Essentials</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Surprise</title>
+
+  <!-- Google Fonts: Alex Brush for elegant calligraphy headers, Playfair Display for readable serif titles, Cormorant Garamond for subtexts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- CryptoJS Library for AES PBKDF2 Client-Side Decryption -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+  <!-- =========================================================================
+       CUSTOM STYLES / CSS SECTION — DARK ROMANTIC THEME
+     ========================================================================= -->
+  <style>
+    /* Reset & Base Setup */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Cormorant Garamond', 'Georgia', serif;
+      background: radial-gradient(circle at center, #1e0f14 0%, #0d0608 100%);
+      color: #f3e5e8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle ambient background glow */
+    body::before {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: rgba(186, 74, 98, 0.15);
+      filter: blur(120px);
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Screen Management */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    }
+    
+    .screen.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Calligraphy Typography Settings */
+    .romantic-heading {
+      font-family: 'Alex Brush', cursive;
+      color: #e8a7b3;
+      text-shadow: 0 0 15px rgba(232, 167, 179, 0.35);
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    .serif-heading {
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 1px;
+    }
+
+    /* Readable Highlighted Name Style */
+    .highlight-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #fce8ec;
+      text-shadow: 0 0 12px rgba(232, 167, 179, 0.4);
+    }
+
+    /* Premium Romantic Buttons */
+    .btn {
+      background: linear-gradient(135deg, #a3485e 0%, #6e2a39 100%);
+      color: #fff;
+      border: 1px solid rgba(232, 167, 179, 0.4);
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 1px;
+      border-radius: 30px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 4px 20px rgba(110, 42, 57, 0.4);
+      transition: all 0.4s ease;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #b8546c 0%, #853344 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(184, 84, 108, 0.6);
+      border-color: rgba(232, 167, 179, 0.7);
+    }
+
+    /* Screen 0: Welcome Screen Styles */
+    #screen-welcome {
+      text-align: center;
+      max-width: 650px;
+    }
+    .welcome-title {
+      font-size: 4.2rem;
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .welcome-subtitle {
+      font-size: 1.3rem;
+      color: #c9a0ab;
+      font-style: italic;
+      margin-bottom: 25px;
+    }
+
+    /* Screen 1: Passcode Screen Styles */
+    #screen-passcode { 
+      text-align: center; 
+      max-width: 420px; 
+    }
+    .passcode-card {
+      background: rgba(25, 12, 17, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(232, 167, 179, 0.15);
+      border-radius: 16px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .input-group { margin-top: 25px; }
+    input[type="password"] {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.1rem;
+      background: rgba(10, 5, 7, 0.8);
+      border: 1px solid rgba(232, 167, 179, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 15px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="password"]:focus {
+      border-color: #e8a7b3;
+      box-shadow: 0 0 10px rgba(232, 167, 179, 0.3);
+    }
+    .error-msg { color: #e66a77; font-size: 0.95rem; margin-top: 15px; display: none; }
+    .loading-msg { color: #e8a7b3; font-size: 0.95rem; margin-top: 15px; display: none; }
+
+    /* Screen 2: Birthday Wish Page Styles */
+    #screen-wish { 
+      text-align: center; 
+      padding: 40px 20px; 
+      max-width: 750px;
+    }
+    .wish-title { 
+      font-size: 3.8rem; 
+      color: #e8a7b3; 
+      margin-bottom: 25px; 
+      line-height: 1.3;
+    }
+    .wish-message { 
+      font-size: 1.35rem; 
+      line-height: 2; 
+      color: #e6d3d7;
+      margin-bottom: 35px; 
+      font-weight: 400;
+    }
+
+    /* Screen 3: Photo Gallery Grid Styles */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 18px;
+      margin-top: 25px;
+    }
+    .gallery-item {
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid rgba(232, 167, 179, 0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(232, 167, 179, 0.6);
+      box-shadow: 0 8px 25px rgba(186, 74, 98, 0.3);
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+
+    /* Album Filter Styles */
+    .album-filters {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(25, 12, 17, 0.6);
+      border: 1px solid rgba(232, 167, 179, 0.3);
+      color: #c9a0ab;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      transition: all 0.3s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: #a3485e;
+      color: #fff;
+      border-color: #e8a7b3;
+    }
+
+    /* Lightbox Modal Styles */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(10, 5, 7, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .lightbox.active { display: flex; opacity: 1; }
+    .lightbox img { 
+      max-width: 90%; 
+      max-height: 82vh; 
+      border-radius: 6px; 
+      border: 1px solid rgba(232, 167, 179, 0.3);
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 25px; right: 35px;
+      color: #e8a7b3; font-size: 2.5rem; cursor: pointer;
+      transition: color 0.3s;
+    }
+    .lightbox-close:hover { color: #fff; }
+  </style>
 </head>
 <body>
 
-    <header>
-        <div class="nav-container">
-            <a href="index.html" class="logo">Link<span>ore</span></a>
-            <nav>
-                <a href="index.html" class="active">Shop</a>
-                <a href="blog.html">Editorial</a>
-                <a href="customize.html">Custom Studio</a>
-            </nav>
-        </div>
-    </header>
+  <!-- =========================================================================
+       SCREEN 0: WELCOME SCREEN
+     ========================================================================= -->
+  <section id="screen-welcome" class="screen active">
+    <h1 class="welcome-title">
+      <span class="romantic-heading">Welcome</span> 
+      <span class="highlight-name">Akshitha</span>
+    </h1>
+    <p class="welcome-subtitle">A special space created with love, just for you.</p>
+    <button class="btn" onclick="navigateTo('screen-passcode')">Begin Experience &rarr;</button>
+  </section>
 
-    <section class="hero">
-        <h1>Refined Collections.</h1>
-        <p>A handpicked ecosystem of premium lifestyle products and minimalist essentials.</p>
-    </section>
+  <!-- =========================================================================
+       SCREEN 1: PASSCODE ENTRY SCREEN
+     ========================================================================= -->
+  <section id="screen-passcode" class="screen">
+    <div class="passcode-card">
+      <h2 class="romantic-heading" style="font-size: 3.5rem; margin-bottom: 5px;">Unlock Your Surprise</h2>
+      <p style="color: #c9a0ab; font-size: 1.05rem;">Enter the secret passcode to reveal your gift.</p>
+      
+      <div class="input-group">
+        <input type="password" id="passcode-input" placeholder="Enter secret key" autocomplete="off">
+        <button class="btn" id="passcode-submit-btn" style="width: 100%; margin-top: 5px;">Unlock</button>
+      </div>
+      
+      <div id="error-message" class="error-msg">Incorrect passcode. Please try again.</div>
+      <div id="loading-message" class="loading-msg">Decrypting memory gallery... Please wait.</div>
+    </div>
+  </section>
 
-    <main class="container">
-        <!-- Interactive Category Switcher -->
-        <div class="category-tabs">
-            <button class="tab-btn active" onclick="filterCategory('all')">All Gear</button>
-            <button class="tab-btn" onclick="filterCategory('tech')">Tech & Tools</button>
-            <button class="tab-btn" onclick="filterCategory('lifestyle')">Lifestyle</button>
-        </div>
+  <!-- =========================================================================
+       SCREEN 2: BIRTHDAY WISH PAGE
+     ========================================================================= -->
+  <section id="screen-wish" class="screen">
+    <h1 class="wish-title">
+      <span class="romantic-heading">Happy Birthday,</span> 
+      <span id="wife-name-placeholder" class="highlight-name">Akshitha</span>!
+    </h1>
+    
+    <div class="wish-message">
+      <!-- REPLACE WITH YOUR PERSONAL MESSAGE -->
+      <p>My love, wishing you the happiest birthday filled with joy and magic. You mean the world to me, and every single day with you is a gift I cherish deeply.</p>
+    </div>
 
-        <div class="grid" id="product-grid">
-            
-            <!-- PRODUCT CARD 1: AMAZON AFFILIATE ITEM -->
-            <div class="card" data-category="tech">
-                <div class="card-img-wrapper">
-                    <!-- Paste your product photo link inside src="" below -->
-                    <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?q=80&w=600" alt="Minimal mechanical keyboard">
-                </div>
-                <div class="card-content">
-                    <span class="card-tag">Curated Tech</span>
-                    <h3>Studio Mechanical Keyboard</h3>
-                    <p>Ultra-minimalist layout featuring responsive brown switches and solid anodized aluminum architecture.</p>
-                    <div class="card-footer">
-                        <span class="price">₹4,499</span>
-                        <!-- Replace internal href with your unique Amazon Affiliate URL -->
-                        <a href="https://amazon.in" target="_blank" class="btn btn-amazon">View on Amazon</a>
-                    </div>
-                </div>
-            </div>
+    <!-- Optional Background Music Element -->
+    <!-- <audio id="bg-music" src="path/to/music.mp3" loop></audio> -->
 
-            <!-- PRODUCT CARD 2: DROPSHIPPED / INQUIRY ITEM -->
-            <div class="card" data-category="lifestyle">
-                <div class="card-img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=600" alt="Minimalist Watch">
-                </div>
-                <div class="card-content">
-                    <span class="card-tag">Linkore Original</span>
-                    <h3>The Classic Matte Watch</h3>
-                    <p>Designed with a premium matte black chassis, custom Japanese quartz interior mechanics, and premium full-grain leather strap.</p>
-                    <div class="card-footer">
-                        <span class="price">₹2,199</span>
-                        <!-- Custom JS link prompts user data processing -->
-                        <button class="btn" onclick="openInquiry('The Classic Matte Watch')">Order Inquiry</button>
-                    </div>
-                </div>
-            </div>
+    <button class="btn" onclick="navigateTo('screen-gallery')">View Our Memories &rarr;</button>
+  </section>
 
-        </div>
-    </main>
+  <!-- =========================================================================
+       SCREEN 3 & 4: PHOTO GALLERY & ALBUM FILTER VIEW
+     ========================================================================= -->
+  <section id="screen-gallery" class="screen">
+    <h2 class="romantic-heading" style="font-size: 4rem; text-align: center; margin-bottom: 10px;">Our Gallery</h2>
 
-    <footer>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="mailto:contact.linkore@gmail.com">Contact Support</a>
-        </div>
-        <p>&copy; 2026 Linkore. All rights reserved.</p>
-        <p class="disclosure">Disclaimer: As an Amazon Associate, Linkore earns a modest tracking commission from qualifying product selections verified through outward platform links.</p>
-    </footer>
+    <!-- Sub-grouping / Category Filters -->
+    <div class="album-filters">
+      <button class="filter-btn active" onclick="filterAlbum('all')">All Photos</button>
+      <button class="filter-btn" onclick="filterAlbum('trips')">Our Trips</button>
+      <button class="filter-btn" onclick="filterAlbum('favorites')">Favorites</button>
+    </div>
 
-    <!-- Native Dynamic Category Switcher Script -->
-    <script>
-        function filterCategory(category) {
-            const cards = document.querySelectorAll('.card');
-            const buttons = document.querySelectorAll('.tab-btn');
-            
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+    <!-- Photo Thumbnails Grid -->
+    <div id="gallery-container" class="gallery-grid"></div>
 
-            cards.forEach(card => {
-                if(category === 'all' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
+    <div style="text-align: center; margin-top: 35px;">
+      <button class="btn" onclick="navigateTo('screen-wish')">&larr; Back to Message</button>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 5: LIGHTBOX / DETAIL VIEW MODAL
+     ========================================================================= -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <span class="lightbox-close" onclick="closeLightbox(force=true)">&times;</span>
+    <img id="lightbox-img" src="" alt="Full-size memory">
+  </div>
+
+
+  <!-- =========================================================================
+       FUNCTIONAL JAVASCRIPT LOGIC
+     ========================================================================= -->
+  <script>
+    /* -------------------------------------------------------------------------
+       CONFIG & METADATA
+       ------------------------------------------------------------------------- */
+    const WIFE_NAME = "Akshitha"; // Configurable placeholder name
+    const TOTAL_PHOTOS = 50; // Total count of photo1.enc ... photo50.enc
+
+    // Store in-memory decrypted image data URLs once processed
+    const decryptedPhotos = [];
+
+    // Optional album categories (maps photo index to category)
+    function getCategoryForPhoto(index) {
+      if (index % 3 === 0) return 'trips';
+      if (index % 2 === 0) return 'favorites';
+      return 'general';
+    }
+
+    document.getElementById('wife-name-placeholder').textContent = WIFE_NAME;
+
+    /* -------------------------------------------------------------------------
+       SCREEN NAVIGATION CONTROLLER
+       ------------------------------------------------------------------------- */
+    function navigateTo(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const targetScreen = document.getElementById(screenId);
+      if (targetScreen) targetScreen.classList.add('active');
+    }
+
+    /* -------------------------------------------------------------------------
+       OPENSSL-COMPATIBLE AES DECRYPTION FUNCTION
+       Handles decryption of AES-256-CBC files encrypted via PBKDF2 with Salt
+       ------------------------------------------------------------------------- */
+    function decryptOpenSSLAES(encryptedArrayBuffer, password) {
+      try {
+        const u8 = new Uint8Array(encryptedArrayBuffer);
+        
+        // OpenSSL files start with "Salted__" header (8 bytes) + 8-byte salt
+        const headerStr = String.fromCharCode.apply(null, u8.subarray(0, 8));
+        if (headerStr !== "Salted__") return null; // Invalid OpenSSL payload
+
+        const salt = CryptoJS.lib.WordArray.create(u8.subarray(8, 16));
+        const ciphertext = CryptoJS.lib.WordArray.create(u8.subarray(16));
+
+        // Derive key and IV matching OpenSSL -pbkdf2 behavior
+        const derivedKeys = CryptoJS.PBKDF2(password, salt, {
+          keySize: (256 + 128) / 32, // 256 bits key + 128 bits IV
+          iterations: 10000,
+          hasher: CryptoJS.algo.SHA256
+        });
+
+        const key = CryptoJS.lib.WordArray.create(derivedKeys.words.slice(0, 8));
+        const iv = CryptoJS.lib.WordArray.create(derivedKeys.words.slice(8, 12));
+
+        // Decrypt
+        const decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, key, {
+          iv: iv,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        });
+
+        // Convert decrypted WordArray to base64
+        const base64 = CryptoJS.enc.Base64.stringify(decrypted);
+        if (!base64 || base64.length === 0) return null;
+
+        return 'data:image/jpeg;base64,' + base64;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       PASSCODE SUBMISSION & DATA FETCHING LOGIC
+       ------------------------------------------------------------------------- */
+    document.getElementById('passcode-submit-btn').addEventListener('click', handleUnlock);
+    document.getElementById('passcode-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleUnlock();
+    });
+
+    async function handleUnlock() {
+      const passcode = document.getElementById('passcode-input').value.trim();
+      const errorEl = document.getElementById('error-message');
+      const loadingEl = document.getElementById('loading-message');
+
+      if (!passcode) return;
+
+      errorEl.style.display = 'none';
+      loadingEl.style.display = 'block';
+
+      try {
+        // Step 1: Fetch photo1.enc to test passcode validity
+        const testRes = await fetch('photo1.enc');
+        if (!testRes.ok) throw new Error("File fetch failed");
+        const testBuffer = await testRes.arrayBuffer();
+        
+        const testDataUrl = decryptOpenSSLAES(testBuffer, passcode);
+
+        // Step 2: Validate decryption
+        if (!testDataUrl) {
+          errorEl.style.display = 'block';
+          loadingEl.style.display = 'none';
+          return;
+        }
+
+        // Store first decrypted photo
+        decryptedPhotos.push({ id: 1, src: testDataUrl, category: getCategoryForPhoto(1) });
+
+        // Step 3: Passcode is verified! Fetch and decrypt remaining files in background
+        const remainingFetches = [];
+        for (let i = 2; i <= TOTAL_PHOTOS; i++) {
+          remainingFetches.push(
+            fetch(`photo${i}.enc`)
+              .then(res => res.arrayBuffer())
+              .then(buf => {
+                const dataUrl = decryptOpenSSLAES(buf, passcode);
+                if (dataUrl) {
+                  decryptedPhotos.push({ id: i, src: dataUrl, category: getCategoryForPhoto(i) });
                 }
-            });
+              })
+              .catch(() => {}) // Skip missing files gracefully
+          );
         }
 
-        function openInquiry(productName) {
-            // Smooth routing straight into custom studio layout passing product variables
-            window.location.href = `customize.html?item=${encodeURIComponent(productName)}`;
+        await Promise.all(remainingFetches);
+
+        // Sort by photo ID to maintain sequence
+        decryptedPhotos.sort((a, b) => a.id - b.id);
+
+        // Step 4: Populate Gallery & Navigate to Wish Page
+        renderGallery('all');
+        loadingEl.style.display = 'none';
+        
+        // Optional music playback trigger:
+        // document.getElementById('bg-music').play();
+
+        navigateTo('screen-wish');
+
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       GALLERY RENDER & ALBUM FILTERING
+       ------------------------------------------------------------------------- */
+    function renderGallery(filterCategory) {
+      const container = document.getElementById('gallery-container');
+      container.innerHTML = '';
+
+      decryptedPhotos.forEach(photo => {
+        if (filterCategory === 'all' || photo.category === filterCategory) {
+          const item = document.createElement('div');
+          item.className = 'gallery-item';
+          item.onclick = () => openLightbox(photo.src);
+
+          const img = document.createElement('img');
+          img.src = photo.src;
+          img.alt = `Memory ${photo.id}`;
+
+          item.appendChild(img);
+          container.appendChild(item);
         }
-    </script>
+      });
+    }
+
+    function filterAlbum(category) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      renderGallery(category);
+    }
+
+    /* -------------------------------------------------------------------------
+       LIGHTBOX HANDLERS
+       ------------------------------------------------------------------------- */
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox(event, force = false) {
+      if (force || event.target.id === 'lightbox') {
+        document.getElementById('lightbox').classList.remove('active');
+      }
+    }
+  </script>
 </body>
 </html>
